@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>แบบสอบถามโครงการมหาวิทยาลัย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#fbe9ee; --ink:#4a2c37; --soft:#86596a; --line:#efc9d4; --accent:#c9506f;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#2a1820; --ink:#fbe6ec; --soft:#cfa0b0; --line:#52303f; --accent:#ff8fab;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#2a1820; --ink:#fbe6ec; --soft:#cfa0b0; --line:#52303f; --accent:#ff8fab;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+html,body{min-height:100%;margin:0}
+body{
+  min-height:100dvh;background:var(--bg);color:var(--ink);
+  font-family:"Prompt","Sarabun","Noto Sans Thai",system-ui,sans-serif;font-weight:300;
+  display:grid;place-items:center;padding:40px 28px;overflow-x:hidden;
+}
+.page{width:min(100%,400px);animation:fade .7s ease}
+@keyframes fade{from{opacity:0}}
+.hide{display:none!important}
+.label{font-size:.85rem;letter-spacing:.06em;color:var(--soft);margin:0 0 28px}
+h1{font-size:1.9rem;line-height:1.4;font-weight:300;margin:0 0 14px;letter-spacing:.01em}
+.lead{margin:0 0 36px;color:var(--soft);line-height:1.9}
+form{display:grid;gap:28px}
+.field label,.field .lab{display:block;font-size:.85rem;color:var(--soft);margin-bottom:4px;font-weight:400}
+input[type=text],input[type=number]{
+  width:100%;font:inherit;font-size:1.1rem;font-weight:300;color:var(--ink);
+  background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:10px 0;
+}
+input::placeholder{color:var(--soft);opacity:.55}
+input:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-bottom-color:var(--ink)}
+.moods{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.moods label{margin:0;cursor:pointer}
+.moods input{position:absolute;opacity:0;pointer-events:none}
+.moods span{display:block;font-size:.9rem;font-weight:300;color:var(--ink);padding:8px 16px;border:1px solid var(--line);border-radius:999px;transition:background .2s,color .2s}
+.moods input:checked+span{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.moods input:focus-visible+span{outline:2px solid var(--ink);outline-offset:3px}
+.err{min-height:1.3em;margin:-12px 0 -12px;font-size:.9rem;color:var(--accent)}
+button{font:inherit;font-size:1rem;font-weight:400;border-radius:999px;cursor:pointer;padding:14px 30px;transition:transform .2s,opacity .2s}
+button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+.solid{background:var(--ink);color:var(--bg);border:1px solid var(--ink)}
+.ghost{background:transparent;color:var(--soft);border:1px solid var(--line)}
+.send{width:100%}
+.note{margin:22px 0 0;font-size:.8rem;color:var(--soft);text-align:center}
+.ask{text-align:center}
+.ask h1{font-size:2.2rem;margin-bottom:18px}
+.ask .lead{margin-bottom:28px;min-height:5.4em}
+.row{display:flex;gap:24px;justify-content:center;align-items:center;min-height:120px;flex-wrap:wrap}
+#yes{transform:scale(var(--s,1))}
+#no.run{position:fixed;z-index:5;background:var(--bg)}
+.sign{margin-top:14px;color:var(--soft);font-size:.9rem}
+.heart{display:block;font-size:2.2rem;color:var(--accent);margin-bottom:18px}
+.pop{position:fixed;z-index:6;pointer-events:none;color:var(--accent);font-size:1.5rem;animation:burst 2s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+@media (min-width:768px){
+  .page{width:min(100%,500px)}
+  h1{font-size:2.4rem}
+  .ask h1{font-size:2.8rem}
+  .lead{font-size:1.1rem}
+  input[type=text],input[type=number]{font-size:1.25rem}
+  .moods span{font-size:1rem;padding:10px 20px}
+}
+@media (prefers-reduced-motion:reduce){.page{animation:none}}
+</style>
+</head>
+<body>
+
+<main class="page" id="form-page">
+  <p class="label">แบบสอบถามโครงการมหาวิทยาลัย</p>
+  <h1>ขอความช่วยเหลือนิดนึงนะ</h1>
+  <p class="lead">กำลังทำโครงการของมหาวิทยาลัย อยากได้คนช่วยตอบแบบสอบถามสั้นๆ ใช้เวลาไม่ถึงหนึ่งนาที ขอบคุณล่วงหน้านะ</p>
+  <form id="form" novalidate>
+    <div class="field">
+      <label for="nick">ชื่อเล่น</label>
+      <input type="text" id="nick" maxlength="20" placeholder="เช่น มินนี่" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="age">อายุ (ปี)</label>
+      <input type="number" id="age" inputmode="numeric" min="1" max="120" placeholder="เช่น 21">
+    </div>
+    <div class="field" role="group" aria-labelledby="moodlab">
+      <span class="lab" id="moodlab">วันนี้รู้สึกยังไงบ้าง</span>
+      <div class="moods">
+        <label><input type="radio" name="mood" value="1"><span>เหนื่อยๆ</span></label>
+        <label><input type="radio" name="mood" value="2"><span>เฉยๆ</span></label>
+        <label><input type="radio" name="mood" value="3"><span>โอเค</span></label>
+        <label><input type="radio" name="mood" value="4"><span>ดี</span></label>
+        <label><input type="radio" name="mood" value="5"><span>ดีมาก</span></label>
+      </div>
+    </div>
+    <div class="err" id="err" role="alert"></div>
+    <button type="submit" class="solid send">ส่งแบบสอบถาม</button>
+  </form>
+  <p class="note">ข้อมูลใช้เพื่อการศึกษาเท่านั้น</p>
+</main>
+
+<main class="page ask hide" id="ask-page">
+  <h1>แล้วเป็นแฟนกันไหม?</h1>
+  <p class="lead" id="msg"></p>
+  <div class="row">
+    <button id="yes" class="solid">ตกลง</button>
+    <button id="no" class="ghost">ไม่เอา</button>
+  </div>
+</main>
+
+<main class="page ask hide" id="done-page">
+  <span class="heart">♡</span>
+  <h1>เป็นแฟนกันแล้วนะ</h1>
+  <p class="lead" id="thanks"></p>
+</main>
+
+<script>
+// แก้ข้อความตรงนี้ได้เลย
+var FROM = "เซ่อ";
+var MESSAGE = "ที่จริงแบบสอบถามนี้เป็นข้ออ้างเฉยๆ แต่ตั้งใจทำเว็บมาให้";
+var THANKS = "จากนี้ไปขอฝากตัว ขอให้อยู๋ด้วยกันไปนาน ๆ นะ บี๋";
+var NO_LINES = ["ไม่เอาจริงๆ เหรอ?","คิดดีๆ อีกทีนะ","ลองกดอีกปุ่มสิ","ใจร้ายจัง","พี่ไม่ยอมแพ้นะ","ปุ่มนี้ไม่ยอมให้กดแล้ว"];
+
+var $ = function(id){return document.getElementById(id)};
+var pages = ["form-page","ask-page","done-page"];
+function show(id){
+  pages.forEach(function(p){$(p).classList.toggle("hide", p !== id)});
+  window.scrollTo(0,0);
+}
+
+$("form").addEventListener("submit", function(e){
+  e.preventDefault();
+  var nick = $("nick").value.trim();
+  var age = parseInt($("age").value, 10);
+  if (!nick){ $("err").textContent = "กรอกชื่อเล่นก่อนนะ"; $("nick").focus(); return; }
+  if (!(age >= 1 && age <= 120)){ $("err").textContent = "กรอกอายุเป็นตัวเลข 1–120 นะ"; $("age").focus(); return; }
+  $("err").textContent = "";
+  $("msg").textContent = MESSAGE;
+  $("thanks").textContent = THANKS;
+  show("ask-page");
+});
+
+var tries = 0, yes = $("yes"), no = $("no");
+function dodge(){
+  tries++;
+  $("msg").textContent = NO_LINES[Math.min(tries-1, NO_LINES.length-1)];
+  yes.style.setProperty("--s", Math.min(1 + tries*0.15, 1.9));
+  no.classList.add("run");
+  var w = window.innerWidth - no.offsetWidth - 16, h = window.innerHeight - no.offsetHeight - 16;
+  no.style.left = Math.max(8, Math.random()*w) + "px";
+  no.style.top = Math.max(8, Math.random()*h) + "px";
+  if (tries >= 6) no.classList.add("hide");
+}
+no.addEventListener("mouseenter", dodge);
+no.addEventListener("click", function(e){e.preventDefault(); dodge()});
+no.addEventListener("touchstart", function(e){e.preventDefault(); dodge()}, {passive:false});
+
+yes.addEventListener("click", function(){
+  show("done-page");
+  var cx = window.innerWidth/2, cy = window.innerHeight/2;
+  for (var i=0;i<30;i++){
+    var p = document.createElement("span");
+    p.className = "pop";
+    p.textContent = "♡";
+    p.style.left = cx + "px"; p.style.top = cy + "px";
+    var a = Math.random()*Math.PI*2, d = 100 + Math.random()*Math.min(window.innerWidth,560)/1.6;
+    p.style.setProperty("--x", Math.cos(a)*d + "px");
+    p.style.setProperty("--y", Math.sin(a)*d + "px");
+    p.style.setProperty("--r", (Math.random()*240-120) + "deg");
+    document.body.appendChild(p);
+    setTimeout(function(el){el.remove()}, 2100, p);
+  }
+});
+</script>
+</body>
+</html>
