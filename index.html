@@ -59,6 +59,9 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 .ghost{background:transparent;color:var(--soft);border:1px solid var(--line)}
 .send{width:100%}
 .note{margin:22px 0 0;font-size:.8rem;color:var(--soft);text-align:center}
+.prog{height:2px;background:var(--line);margin:30px 0 12px;overflow:hidden;border-radius:2px}
+.bar{height:100%;width:0;background:var(--accent);transition:width .12s linear}
+.pct{font-size:.85rem;color:var(--soft)}
 .ask{text-align:center}
 .ask h1{font-size:2.2rem;margin-bottom:18px}
 .ask .lead{margin-bottom:28px;min-height:5.4em}
@@ -84,12 +87,12 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 
 <main class="page" id="form-page">
   <p class="label">แบบสอบถามโครงการมหาวิทยาลัย</p>
-  <h1>ขอความช่วยเหลือนิดนึงนะ</h1>
-  <p class="lead">กำลังทำโครงการของมหาวิทยาลัย อยากได้คนช่วยตอบแบบสอบถามสั้นๆ ใช้เวลาไม่ถึงหนึ่งนาที ขอบคุณล่วงหน้านะ</p>
+  <h1>ขอความช่วยเหลือหน่อยนะคะ</h1>
+  <p class="lead">กำลังทำโครงการของมหาวิทยาลัย อยากได้คนช่วยตอบแบบสอบถามสั้นๆ ใช้เวลาไม่ถึงหนึ่งนาที </p>
   <form id="form" novalidate>
     <div class="field">
       <label for="nick">ชื่อเล่น</label>
-      <input type="text" id="nick" maxlength="20" placeholder="เช่น มินนี่" autocomplete="off">
+      <input type="text" id="nick" maxlength="20" placeholder="เช่น ยู" autocomplete="off">
     </div>
     <div class="field">
       <label for="age">อายุ (ปี)</label>
@@ -111,12 +114,19 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
   <p class="note">ข้อมูลใช้เพื่อการศึกษาเท่านั้น</p>
 </main>
 
+<main class="page ask hide" id="load-page">
+  <h1>กำลังเตรียมข้อมูล</h1>
+  <p class="lead" id="status">สำหรับหน้าถัดไป</p>
+  <div class="prog"><div class="bar" id="bar"></div></div>
+  <div class="pct" id="pct">0%</div>
+</main>
+
 <main class="page ask hide" id="ask-page">
-  <h1>แล้วเป็นแฟนกันไหม?</h1>
+  <h1>เป็นแฟนกันไหม?</h1>
   <p class="lead" id="msg"></p>
   <div class="row">
     <button id="yes" class="solid">ตกลง</button>
-    <button id="no" class="ghost">ไม่เอา</button>
+    <button id="no" class="ghost">ไม่</button>
   </div>
 </main>
 
@@ -129,15 +139,19 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 <script>
 // แก้ข้อความตรงนี้ได้เลย
 var FROM = "เซ่อ";
-var MESSAGE = "ที่จริงแบบสอบถามนี้เป็นข้ออ้างเฉยๆ แต่ตั้งใจทำเว็บมาให้";
-var THANKS = "จากนี้ไปขอฝากตัว ขอให้อยู๋ด้วยกันไปนาน ๆ นะ บี๋";
+var MESSAGE = "แบบสอบถามนี้เป็นข้ออ้างเฉยๆ แต่ตั้งใจทำเว็บมาให้น้องยู";
+var THANKS = "ขอให้อยู่ด้วยกันไปนาน ๆ นะ บี๋";
 var NO_LINES = ["ไม่เอาจริงๆ เหรอ?","คิดดีๆ อีกทีนะ","ลองกดอีกปุ่มสิ","ใจร้ายจัง","พี่ไม่ยอมแพ้นะ","ปุ่มนี้ไม่ยอมให้กดแล้ว"];
 
 var $ = function(id){return document.getElementById(id)};
-var pages = ["form-page","ask-page","done-page"];
+var pages = ["form-page","load-page","ask-page","done-page"];
 function show(id){
   pages.forEach(function(p){$(p).classList.toggle("hide", p !== id)});
   window.scrollTo(0,0);
+}
+function setProgress(n){
+  $("bar").style.width = n + "%";
+  $("pct").textContent = n + "%";
 }
 
 $("form").addEventListener("submit", function(e){
@@ -149,7 +163,24 @@ $("form").addEventListener("submit", function(e){
   $("err").textContent = "";
   $("msg").textContent = MESSAGE;
   $("thanks").textContent = THANKS;
-  show("ask-page");
+  show("load-page");
+  setProgress(0);
+  $("status").textContent = "กำลังเตรียมข้อมูลของ " + nick;
+  var pct = 0;
+  var steps = [[30,"กำลังตรวจสอบคำตอบ"],[60,"กำลังจัดเตรียมหน้าถัดไป"],[90,"เกือบเสร็จแล้ว"]];
+  var timer = setInterval(function(){
+    pct += 1 + Math.floor(Math.random()*3);
+    if (pct >= 99){
+      pct = 99;
+      clearInterval(timer);
+      setTimeout(function(){
+        setProgress(100);
+        setTimeout(function(){show("ask-page")}, 500);
+      }, 700);
+    }
+    setProgress(pct);
+    steps.forEach(function(s){ if (pct >= s[0]) $("status").textContent = s[1]; });
+  }, 60);
 });
 
 var tries = 0, yes = $("yes"), no = $("no");
